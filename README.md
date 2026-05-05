@@ -21,4 +21,5 @@ Team 73 Project Group for OSU Ecampus CS340
     PORT=29012
 
     (replace * with your information)
-7. Run `npx forever start app.js`
+6. Run `npx forever start app.js`
+7. To stop, run `npx forever stop app.js`
