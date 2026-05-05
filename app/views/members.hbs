@@ -1,0 +1,113 @@
+<h1>Members</h1>
+
+<h2>Current Members</h2>
+
+<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email</th>
+			<th>Phone</th>
+			<th>Join Date</th>
+			<th>Trainer</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each members}}
+		<tr>
+			<td>{{memberID}}</td>
+			<td>{{firstName}}</td>
+			<td>{{lastName}}</td>
+			<td>{{email}}</td>
+			<td>{{phoneNumber}}</td>
+			<td>{{joinDate}}</td>
+			<td>{{trainerName}}</td>
+			<td>
+				<div class="action-buttons">
+					<button type="button" class="edit-button" onclick="showForm('edit-member-{{memberID}}')">Edit</button>
+					<button type="button" class="delete-button" onclick="showForm('delete-member-{{memberID}}')">Delete</button>
+				</div>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+<div class="add-button-row">
+	<button type="button" onclick="showForm('add-member-form')">Add Member</button>
+</div>
+
+<form id="add-member-form" class="crud-form" method="POST" action="/members/add">
+	<h2>Add Member</h2>
+
+	<label>First Name</label>
+	<input type="text" name="firstName" required>
+
+	<label>Last Name</label>
+	<input type="text" name="lastName" required>
+
+	<label>Email</label>
+	<input type="email" name="email" required>
+
+	<label>Phone Number</label>
+	<input type="text" name="phoneNumber">
+
+	<label>Join Date</label>
+	<input type="date" name="joinDate" required>
+
+	<label>Trainer</label>
+	<select name="trainerID">
+		<option value="">No Trainer</option>
+		{{#each trainers}}
+		<option value="{{trainerID}}">{{firstName}} {{lastName}}</option>
+		{{/each}}
+	</select>
+
+	<button type="submit">Add Member</button>
+</form>
+
+{{#each members}}
+<form id="edit-member-{{memberID}}" class="crud-form" method="POST" action="/members/edit">
+	<h2>Edit Member</h2>
+
+	<input type="hidden" name="memberID" value="{{memberID}}">
+
+	<label>First Name</label>
+	<input type="text" name="firstName" value="{{firstName}}" required>
+
+	<label>Last Name</label>
+	<input type="text" name="lastName" value="{{lastName}}" required>
+
+	<label>Email</label>
+	<input type="email" name="email" value="{{email}}" required>
+
+	<label>Phone Number</label>
+	<input type="text" name="phoneNumber" value="{{phoneNumber}}">
+
+	<label>Join Date</label>
+	<input type="date" name="joinDate" value="{{joinDate}}" required>
+
+	<label>Trainer</label>
+	<select name="trainerID">
+		<option value="">No Trainer</option>
+		{{#each ../trainers}}
+		<option value="{{trainerID}}">{{firstName}} {{lastName}}</option>
+		{{/each}}
+	</select>
+
+	<button type="submit">Save Changes</button>
+</form>
+
+<form id="delete-member-{{memberID}}" class="crud-form" method="POST" action="/members/delete">
+	<h2>Delete Member</h2>
+
+	<input type="hidden" name="memberID" value="{{memberID}}">
+
+	<p>Are you sure you want to delete {{firstName}} {{lastName}}?</p>
+
+	<button type="submit" class="delete-button">Delete Member</button>
+</form>
+{{/each}}

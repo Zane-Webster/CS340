@@ -1,0 +1,95 @@
+<h1>Classes</h1>
+
+<h2>Current Classes</h2>
+
+<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Class Name</th>
+			<th>Schedule</th>
+			<th>Capacity</th>
+			<th>Trainer</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each classes}}
+		<tr>
+			<td>{{classID}}</td>
+			<td>{{className}}</td>
+			<td>{{schedule}}</td>
+			<td>{{capacity}}</td>
+			<td>{{trainerName}}</td>
+			<td>
+				<div class="action-buttons">
+					<button type="button" class="edit-button" onclick="showForm('edit-class-{{classID}}')">Edit</button>
+					<button type="button" class="delete-button" onclick="showForm('delete-class-{{classID}}')">Delete</button>
+				</div>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+<div class="add-button-row">
+	<button type="button" onclick="showForm('add-class-form')">Add Class</button>
+</div>
+
+<form id="add-class-form" class="crud-form" method="POST" action="/classes/add">
+	<h2>Add Class</h2>
+
+	<label>Class Name</label>
+	<input type="text" name="className" required>
+
+	<label>Schedule</label>
+	<input type="text" name="schedule" required>
+
+	<label>Capacity</label>
+	<input type="number" name="capacity" required>
+
+	<label>Trainer</label>
+	<select name="trainerID" required>
+		{{#each trainers}}
+		<option value="{{trainerID}}">{{firstName}} {{lastName}}</option>
+		{{/each}}
+	</select>
+
+	<button type="submit">Add Class</button>
+</form>
+
+{{#each classes}}
+<form id="edit-class-{{classID}}" class="crud-form" method="POST" action="/classes/edit">
+	<h2>Edit Class</h2>
+
+	<input type="hidden" name="classID" value="{{classID}}">
+
+	<label>Class Name</label>
+	<input type="text" name="className" value="{{className}}" required>
+
+	<label>Schedule</label>
+	<input type="text" name="schedule" value="{{schedule}}" required>
+
+	<label>Capacity</label>
+	<input type="number" name="capacity" value="{{capacity}}" required>
+
+	<label>Trainer</label>
+	<select name="trainerID" required>
+		{{#each ../trainers}}
+		<option value="{{trainerID}}">{{firstName}} {{lastName}}</option>
+		{{/each}}
+	</select>
+
+	<button type="submit">Save Changes</button>
+</form>
+
+<form id="delete-class-{{classID}}" class="crud-form" method="POST" action="/classes/delete">
+	<h2>Delete Class</h2>
+
+	<input type="hidden" name="classID" value="{{classID}}">
+
+	<p>Are you sure you want to delete {{className}}?</p>
+
+	<button type="submit" class="delete-button">Delete Class</button>
+</form>
+{{/each}}

@@ -7,6 +7,8 @@ PROJECT GROUP 73
 Project Step 2 Draft
 DDL with Sample Data 
 
+CREATE statements generated using MySQL Forward Engineer
+
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,7 +28,7 @@ DROP TABLE IF EXISTS Trainers;
 -- CREATE TRAINERS TABLE  ---------------------
 -- --------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`Trainers` (
+CREATE TABLE Trainers (
   `trainerID` INT NOT NULL AUTO_INCREMENT,
   `firstName` VARCHAR(50) NOT NULL,
   `lastName` VARCHAR(50) NOT NULL,
@@ -41,7 +43,7 @@ ENGINE = InnoDB;
 -- CREATE MEMBERS TABLE  ----------------------
 -- --------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`Members` (
+CREATE TABLE Members (
   `memberID` INT NOT NULL AUTO_INCREMENT,
   `firstName` VARCHAR(50) NOT NULL,
   `lastName` VARCHAR(50) NOT NULL,
@@ -55,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`Members` (
   UNIQUE INDEX `idmember_UNIQUE` (`memberID` ASC) VISIBLE,
   CONSTRAINT `fk_members_trainers1`
     FOREIGN KEY (`trainerID`)
-    REFERENCES `cs340_webstcal`.`Trainers` (`trainerID`)
+    REFERENCES `Trainers` (`trainerID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -64,7 +66,7 @@ ENGINE = InnoDB;
 -- CREATE CLASSES TABLE  ----------------------
 -- --------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`Classes` (
+CREATE TABLE Classes (
   `classID` INT NOT NULL AUTO_INCREMENT,
   `className` VARCHAR(255) NOT NULL,
   `schedule` VARCHAR(255) NOT NULL,
@@ -75,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`Classes` (
   UNIQUE INDEX `idclass_UNIQUE` (`classID` ASC) VISIBLE,
   CONSTRAINT `fk_classes_trainers`
     FOREIGN KEY (`trainerID`)
-    REFERENCES `cs340_webstcal`.`Trainers` (`trainerID`)
+    REFERENCES `Trainers` (`trainerID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -84,7 +86,7 @@ ENGINE = InnoDB;
 -- CREATE MEMBERSHIPS TABLE  ------------------
 -- --------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`Memberships` (
+CREATE TABLE Memberships (
   `membershipID` INT NOT NULL AUTO_INCREMENT,
   `membershipName` VARCHAR(255) NOT NULL,
   `price` DECIMAL(6,2) NOT NULL,
@@ -96,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`Memberships` (
   UNIQUE INDEX `idmembership_UNIQUE` (`membershipID` ASC) VISIBLE,
   CONSTRAINT `fk_memberships_members1`
     FOREIGN KEY (`memberID`)
-    REFERENCES `cs340_webstcal`.`Members` (`memberID`)
+    REFERENCES `Members` (`memberID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -105,7 +107,7 @@ ENGINE = InnoDB;
 -- CREATE MEMBERCLASSES TABLE  ----------------
 -- --------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`MemberClasses` (
+CREATE TABLE MemberClasses (
   `memberID` INT NOT NULL,
   `classID` INT NOT NULL,
   `enrollmentDate` DATE NOT NULL,
@@ -114,12 +116,12 @@ CREATE TABLE IF NOT EXISTS `cs340_webstcal`.`MemberClasses` (
   PRIMARY KEY (`classID`, `memberID`),
   CONSTRAINT `fk_members_has_classes_members1`
     FOREIGN KEY (`memberID`)
-    REFERENCES `cs340_webstcal`.`Members` (`memberID`)
+    REFERENCES `Members` (`memberID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_members_has_classes_classes1`
     FOREIGN KEY (`classID`)
-    REFERENCES `cs340_webstcal`.`Classes` (`classID`)
+    REFERENCES `Classes` (`classID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
