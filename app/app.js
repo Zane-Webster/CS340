@@ -17,7 +17,7 @@ function formatDate(date) {
 // setup handlebars
 app.engine('hbs', engine({ extname: '.hbs' }));
 app.set('view engine', 'hbs');
-app.set('views', './pages');
+app.set('views', './views');
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
