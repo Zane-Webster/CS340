@@ -1,0 +1,87 @@
+<h1>Trainers</h1>
+
+<h2>Current Trainers</h2>
+
+<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email</th>
+			<th>Bio</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each trainers}}
+		<tr>
+			<td>{{trainerID}}</td>
+			<td>{{firstName}}</td>
+			<td>{{lastName}}</td>
+			<td>{{email}}</td>
+			<td>{{bio}}</td>
+			<td>
+				<div class="action-buttons">
+					<button type="button" class="edit-button" onclick="showForm('edit-trainer-{{trainerID}}')">Edit</button>
+					<button type="button" class="delete-button" onclick="showForm('delete-trainer-{{trainerID}}')">Delete</button>
+				</div>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+<div class="add-button-row">
+	<button type="button" onclick="showForm('add-trainer-form')">Add Trainer</button>
+</div>
+
+<form id="add-trainer-form" class="crud-form" method="POST" action="/trainers/add">
+	<h2>Add Trainer</h2>
+
+	<label>First Name</label>
+	<input type="text" name="firstName" required>
+
+	<label>Last Name</label>
+	<input type="text" name="lastName" required>
+
+	<label>Email</label>
+	<input type="email" name="email" required>
+
+	<label>Bio</label>
+	<input type="text" name="bio">
+
+	<button type="submit">Add Trainer</button>
+</form>
+
+{{#each trainers}}
+<form id="edit-trainer-{{trainerID}}" class="crud-form" method="POST" action="/trainers/edit">
+	<h2>Edit Trainer</h2>
+
+	<input type="hidden" name="trainerID" value="{{trainerID}}">
+
+	<label>First Name</label>
+	<input type="text" name="firstName" value="{{firstName}}" required>
+
+	<label>Last Name</label>
+	<input type="text" name="lastName" value="{{lastName}}" required>
+
+	<label>Email</label>
+	<input type="email" name="email" value="{{email}}" required>
+
+	<label>Bio</label>
+	<input type="text" name="bio" value="{{bio}}">
+
+	<button type="submit">Save Changes</button>
+</form>
+
+<form id="delete-trainer-{{trainerID}}" class="crud-form" method="POST" action="/trainers/delete">
+	<h2>Delete Trainer</h2>
+
+	<input type="hidden" name="trainerID" value="{{trainerID}}">
+
+	<p>Are you sure you want to delete {{firstName}} {{lastName}}?</p>
+
+	<button type="submit" class="delete-button">Delete Trainer</button>
+</form>
+{{/each}}

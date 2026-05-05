@@ -1,0 +1,193 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	background: #f4f6f8;
+	color: #222;
+}
+
+nav {
+	background: #1f2937;
+	padding: 16px 32px;
+	display: flex;
+	gap: 18px;
+	flex-wrap: wrap;
+}
+
+nav a {
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+nav a:hover {
+	text-decoration: underline;
+}
+
+main,
+body > h1,
+body > h2,
+body > p,
+body > ul,
+body > table,
+body > form {
+	max-width: 1100px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+h1 {
+	margin-top: 32px;
+	color: #111827;
+}
+
+h2 {
+	margin-top: 32px;
+	color: #374151;
+	border-bottom: 2px solid #d1d5db;
+	padding-bottom: 8px;
+}
+
+p {
+	line-height: 1.6;
+}
+
+ul {
+	background: white;
+	padding: 24px 40px;
+	border-radius: 10px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+li {
+	margin: 10px 0;
+}
+
+li a {
+	color: #2563eb;
+	font-weight: bold;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	background: white;
+	margin-top: 16px;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+th {
+	background: #374151;
+	color: white;
+	text-align: left;
+	padding: 12px;
+}
+
+td {
+	padding: 12px;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+tr:last-child td {
+	border-bottom: none;
+}
+
+tr:hover {
+	background: #f9fafb;
+}
+
+form {
+	background: white;
+	margin-top: 16px;
+	padding: 24px;
+	border-radius: 10px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	display: grid;
+	gap: 12px;
+}
+
+label {
+	font-weight: bold;
+	color: #374151;
+}
+
+input,
+select {
+	padding: 10px;
+	border: 1px solid #cbd5e1;
+	border-radius: 6px;
+	font-size: 1rem;
+}
+
+input:focus,
+select:focus {
+	outline: none;
+	border-color: #2563eb;
+}
+
+button {
+	margin-top: 10px;
+	padding: 12px 16px;
+	background: #2563eb;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	width: fit-content;
+}
+
+button:hover {
+	background: #1d4ed8;
+}
+
+.action-buttons {
+	display: flex;
+	gap: 8px;
+}
+
+.add-button-row {
+	max-width: 1100px;
+	margin: 16px auto;
+}
+
+.crud-form {
+	display: none;
+}
+
+.delete-button {
+	background: #dc2626;
+}
+
+.delete-button:hover {
+	background: #b91c1c;
+}
+
+.edit-button {
+	background: #059669;
+}
+
+.edit-button:hover {
+	background: #047857;
+}
+
+@media (max-width: 700px) {
+	nav {
+		flex-direction: column;
+	}
+
+	table {
+		font-size: 0.9rem;
+	}
+
+	th,
+	td {
+		padding: 8px;
+	}
+}

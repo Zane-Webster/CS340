@@ -1,0 +1,95 @@
+<h1>Class Enrollments</h1>
+
+<h2>Current Enrollments</h2>
+
+<table>
+	<thead>
+		<tr>
+			<th>Member</th>
+			<th>Class</th>
+			<th>Enrollment Date</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each memberClasses}}
+		<tr>
+			<td>{{memberName}}</td>
+			<td>{{className}}</td>
+			<td>{{enrollmentDate}}</td>
+			<td>
+				<div class="action-buttons">
+					<button type="button" class="edit-button" onclick="showForm('edit-enrollment-{{memberID}}-{{classID}}')">Edit</button>
+					<button type="button" class="delete-button" onclick="showForm('delete-enrollment-{{memberID}}-{{classID}}')">Delete</button>
+				</div>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+<div class="add-button-row">
+	<button type="button" onclick="showForm('add-enrollment-form')">Add Enrollment</button>
+</div>
+
+<form id="add-enrollment-form" class="crud-form" method="POST" action="/member-classes/add">
+	<h2>Add Enrollment</h2>
+
+	<label>Member</label>
+	<select name="memberID" required>
+		{{#each members}}
+		<option value="{{memberID}}">{{firstName}} {{lastName}}</option>
+		{{/each}}
+	</select>
+
+	<label>Class</label>
+	<select name="classID" required>
+		{{#each classes}}
+		<option value="{{classID}}">{{className}}</option>
+		{{/each}}
+	</select>
+
+	<label>Enrollment Date</label>
+	<input type="date" name="enrollmentDate" required>
+
+	<button type="submit">Add Enrollment</button>
+</form>
+
+{{#each memberClasses}}
+<form id="edit-enrollment-{{memberID}}-{{classID}}" class="crud-form" method="POST" action="/member-classes/edit">
+	<h2>Edit Enrollment</h2>
+
+	<input type="hidden" name="oldMemberID" value="{{memberID}}">
+	<input type="hidden" name="oldClassID" value="{{classID}}">
+
+	<label>Member</label>
+	<select name="newMemberID" required>
+		{{#each ../members}}
+		<option value="{{memberID}}">{{firstName}} {{lastName}}</option>
+		{{/each}}
+	</select>
+
+	<label>Class</label>
+	<select name="newClassID" required>
+		{{#each ../classes}}
+		<option value="{{classID}}">{{className}}</option>
+		{{/each}}
+	</select>
+
+	<label>Enrollment Date</label>
+	<input type="date" name="enrollmentDate" value="{{enrollmentDate}}" required>
+
+	<button type="submit">Save Changes</button>
+</form>
+
+<form id="delete-enrollment-{{memberID}}-{{classID}}" class="crud-form" method="POST" action="/member-classes/delete">
+	<h2>Delete Enrollment</h2>
+
+	<input type="hidden" name="memberID" value="{{memberID}}">
+	<input type="hidden" name="classID" value="{{classID}}">
+
+	<p>Are you sure you want to remove {{memberName}} from {{className}}?</p>
+
+	<button type="submit" class="delete-button">Delete Enrollment</button>
+</form>
+{{/each}}

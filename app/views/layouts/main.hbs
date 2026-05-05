@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GYMS Database</title>
+	<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+	<nav>
+		<a href="/">Home</a>
+		<a href="/members">Members</a>
+		<a href="/trainers">Trainers</a>
+		<a href="/classes">Classes</a>
+		<a href="/memberships">Memberships</a>
+		<a href="/member-classes">Class Enrollments</a>
+	</nav>
+
+	{{{body}}}
+
+    <!-- 
+        Helper function to show add, edit and delete forms. Triggers when you press a CRUD action button.
+
+        Hides all other CRUD forms, then finds the form you clicked and shows only that form.
+    -->
+	<script>
+		function showForm(formId) {
+			document.querySelectorAll('.crud-form').forEach(form => {
+				form.style.display = 'none';
+			});
+
+			const form = document.getElementById(formId);
+			if (form) form.style.display = 'block';
+		}
+	</script>
+</body>
+</html>
