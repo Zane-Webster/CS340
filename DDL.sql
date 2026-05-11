@@ -14,19 +14,11 @@ CREATE statements generated using MySQL Forward Engineer
 SET FOREIGN_KEY_CHECKS=0;
 SET AUTOCOMMIT=0;
 
--- --------------------------------------------
--- DROP TABLES  -------------------------------
--- --------------------------------------------
-
 DROP TABLE IF EXISTS MemberClasses;
 DROP TABLE IF EXISTS Memberships;
 DROP TABLE IF EXISTS Classes;
 DROP TABLE IF EXISTS Members;
 DROP TABLE IF EXISTS Trainers;
-
--- --------------------------------------------
--- CREATE TRAINERS TABLE  ---------------------
--- --------------------------------------------
 
 CREATE TABLE Trainers (
   `trainerID` INT NOT NULL AUTO_INCREMENT,
@@ -38,10 +30,6 @@ CREATE TABLE Trainers (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
   UNIQUE INDEX `idtrainer_UNIQUE` (`trainerID` ASC) VISIBLE)
 ENGINE = InnoDB;
-
--- --------------------------------------------
--- CREATE MEMBERS TABLE  ----------------------
--- --------------------------------------------
 
 CREATE TABLE Members (
   `memberID` INT NOT NULL AUTO_INCREMENT,
@@ -58,13 +46,9 @@ CREATE TABLE Members (
   CONSTRAINT `fk_members_trainers1`
     FOREIGN KEY (`trainerID`)
     REFERENCES `Trainers` (`trainerID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
--- --------------------------------------------
--- CREATE CLASSES TABLE  ----------------------
--- --------------------------------------------
 
 CREATE TABLE Classes (
   `classID` INT NOT NULL AUTO_INCREMENT,
@@ -78,13 +62,9 @@ CREATE TABLE Classes (
   CONSTRAINT `fk_classes_trainers`
     FOREIGN KEY (`trainerID`)
     REFERENCES `Trainers` (`trainerID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
--- --------------------------------------------
--- CREATE MEMBERSHIPS TABLE  ------------------
--- --------------------------------------------
 
 CREATE TABLE Memberships (
   `membershipID` INT NOT NULL AUTO_INCREMENT,
@@ -99,13 +79,9 @@ CREATE TABLE Memberships (
   CONSTRAINT `fk_memberships_members1`
     FOREIGN KEY (`memberID`)
     REFERENCES `Members` (`memberID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
--- --------------------------------------------
--- CREATE MEMBERCLASSES TABLE  ----------------
--- --------------------------------------------
 
 CREATE TABLE MemberClasses (
   `memberID` INT NOT NULL,
@@ -117,63 +93,73 @@ CREATE TABLE MemberClasses (
   CONSTRAINT `fk_members_has_classes_members1`
     FOREIGN KEY (`memberID`)
     REFERENCES `Members` (`memberID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_members_has_classes_classes1`
     FOREIGN KEY (`classID`)
     REFERENCES `Classes` (`classID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
--- --------------------------------------------
--- INSERT TRAINERS  ---------------------------
--- --------------------------------------------
+INSERT INTO Trainers
+(firstName, lastName, email, bio)
+VALUES
+('John', 'Smith', 'john@gym.com', 'Strength and conditioning specialist.'),
+('Smith', 'John', 'smith@gym.com', 'Yoga and mobility specialist.'),
+('Jane', 'Doe', 'jane@gym.com', 'Beginner specialist.');
 
-INSERT INTO Trainers VALUES
-(1, 'John', 'Smith', 'john@gym.com', 'Strength and conditioning specialist.'),
-(2, 'Smith', 'John', 'smith@gym.com', 'Yoga and mobility specialist.'),
-(3, 'Jane', 'Doe', 'jane@gym.com', 'Beginner specialist.');
+INSERT INTO Members
+(firstName, lastName, email, phoneNumber, joinDate, trainerID)
+VALUES
+('Alex', 'Alexson', 'alex@member.com', '5411234567', '2026-01-15',
+  (SELECT trainerID FROM Trainers WHERE email = 'john@gym.com')),
+('Taylor', 'Smith', 'taylor@member.com', '5415415411', '2026-02-03',
+  (SELECT trainerID FROM Trainers WHERE email = 'smith@gym.com')),
+('Casey', 'Robinson', 'casey@member.com', NULL, '2026-03-20',
+  (SELECT trainerID FROM Trainers WHERE email = 'jane@gym.com')),
+('Jamie', 'Smith', 'jamie@member.com', '5115115111', '2026-04-01', NULL);
 
--- --------------------------------------------
--- INSERT MEMBERS  ----------------------------
--- --------------------------------------------
+INSERT INTO Classes
+(className, schedule, capacity, trainerID)
+VALUES
+('Beginner Strength', 'Mondays at 6:00 PM', 20,
+  (SELECT trainerID FROM Trainers WHERE email = 'john@gym.com')),
+('Morning Yoga', 'Wednesdays at 8:00 AM', 15,
+  (SELECT trainerID FROM Trainers WHERE email = 'smith@gym.com')),
+('Cardio Basics', 'Fridays at 5:30 PM', 25,
+  (SELECT trainerID FROM Trainers WHERE email = 'jane@gym.com'));
 
-INSERT INTO Members VALUES
-(1, 'Alex', 'Alexson', 'alex@member.com', '5411234567', '2026-01-15', 1),
-(2, 'Taylor', 'Smith', 'taylor@member.com', '5415415411', '2026-02-03', 2),
-(3, 'Casey', 'Robinson', 'casey@member.com', NULL, '2026-03-20', 3),
-(4, 'Jamie', 'Smith', 'jamie@member.com', '5115115111', '2026-04-01', NULL);
+INSERT INTO Memberships
+(membershipName, price, startDate, endDate, memberID)
+VALUES
+('Basic', 39.99, '2026-01-15', '2026-02-15',
+  (SELECT memberID FROM Members WHERE email = 'alex@member.com')),
+('Premium', 59.99, '2026-02-03', '2026-03-03',
+  (SELECT memberID FROM Members WHERE email = 'taylor@member.com')),
+('Basic', 44.99, '2026-02-16', '2026-03-16',
+  (SELECT memberID FROM Members WHERE email = 'alex@member.com')),
+('Student', 29.99, '2026-03-20', '2026-04-20',
+  (SELECT memberID FROM Members WHERE email = 'casey@member.com'));
 
--- --------------------------------------------
--- INSERT CLASSES  ----------------------------
--- --------------------------------------------
-
-INSERT INTO Classes VALUES
-(1, 'Beginner Strength', 'Mondays at 6:00 PM', 20, 1),
-(2, 'Morning Yoga', 'Wednesdays at 8:00 AM', 15, 2),
-(3, 'Cardio Basics', 'Fridays at 5:30 PM', 25, 3);
-
--- --------------------------------------------
--- INSERT MEMBERSHIPS  ------------------------
--- --------------------------------------------
-
-INSERT INTO Memberships VALUES
-(1, 'Basic', 39.99, '2026-01-15', '2026-02-15', 1),
-(2, 'Premium', 59.99, '2026-02-03', '2026-03-03', 2),
-(3, 'Basic', 44.99, '2026-02-16', '2026-03-16', 1),
-(4, 'Student', 29.99, '2026-03-20', '2026-04-20', 3);
-
--- --------------------------------------------
--- INSERT MEMBERCLASSES  ----------------------
--- --------------------------------------------
-
-INSERT INTO MemberClasses VALUES
-(1, 1, '2026-01-20'),
-(1, 2, '2026-01-22'),
-(2, 1, '2026-02-10'),
-(3, 2, '2026-03-25'),
-(4, 3, '2026-04-05');
+INSERT INTO MemberClasses
+(memberID, classID, enrollmentDate)
+VALUES
+((SELECT memberID FROM Members WHERE email = 'alex@member.com'),
+ (SELECT classID FROM Classes WHERE className = 'Beginner Strength'),
+ '2026-01-20'),
+((SELECT memberID FROM Members WHERE email = 'alex@member.com'),
+ (SELECT classID FROM Classes WHERE className = 'Morning Yoga'),
+ '2026-01-22'),
+((SELECT memberID FROM Members WHERE email = 'taylor@member.com'),
+ (SELECT classID FROM Classes WHERE className = 'Beginner Strength'),
+ '2026-02-10'),
+((SELECT memberID FROM Members WHERE email = 'casey@member.com'),
+ (SELECT classID FROM Classes WHERE className = 'Morning Yoga'),
+ '2026-03-25'),
+((SELECT memberID FROM Members WHERE email = 'jamie@member.com'),
+ (SELECT classID FROM Classes WHERE className = 'Cardio Basics'),
+ '2026-04-05');
 
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
