@@ -84,12 +84,13 @@ CREATE TABLE Memberships (
 ENGINE = InnoDB;
 
 CREATE TABLE MemberClasses (
+  `memberClassID` INT NOT NULL AUTO_INCREMENT,
   `memberID` INT NOT NULL,
   `classID` INT NOT NULL,
   `enrollmentDate` DATE NOT NULL,
+  PRIMARY KEY (`memberClassID`),
   INDEX `fk_members_has_classes_classes1_idx` (`classID` ASC) VISIBLE,
   INDEX `fk_members_has_classes_members1_idx` (`memberID` ASC) VISIBLE,
-  PRIMARY KEY (`classID`, `memberID`),
   CONSTRAINT `fk_members_has_classes_members1`
     FOREIGN KEY (`memberID`)
     REFERENCES `Members` (`memberID`)
