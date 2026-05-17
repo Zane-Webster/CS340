@@ -1,5 +1,13 @@
 <h1>Class Enrollments</h1>
 
+<p>
+	<button type="button" class="delete-button" onclick="window.location.href='/member-classes/delete-demo'">
+		Delete Jamie Enrollment to Demo RESET
+	</button>
+	<br><br>
+	RESET button located at top right of page
+</p>
+
 <h2>Current Enrollments</h2>
 
 <table>
@@ -19,8 +27,8 @@
 			<td>{{enrollmentDate}}</td>
 			<td>
 				<div class="action-buttons">
-					<button type="button" class="edit-button" onclick="showForm('edit-enrollment-{{memberID}}-{{classID}}')">Edit</button>
-					<button type="button" class="delete-button" onclick="showForm('delete-enrollment-{{memberID}}-{{classID}}')">Delete</button>
+					<button type="button" class="edit-button" onclick="showForm('edit-enrollment-{{memberClassID}}')">Edit</button>
+					<button type="button" class="delete-button" onclick="showForm('delete-enrollment-{{memberClassID}}')">Delete</button>
 				</div>
 			</td>
 		</tr>
@@ -56,11 +64,10 @@
 </form>
 
 {{#each memberClasses}}
-<form id="edit-enrollment-{{memberID}}-{{classID}}" class="crud-form" method="POST" action="/member-classes/edit">
+<form id="edit-enrollment-{{memberClassID}}" class="crud-form" method="POST" action="/member-classes/edit">
 	<h2>Edit Enrollment</h2>
 
-	<input type="hidden" name="oldMemberID" value="{{memberID}}">
-	<input type="hidden" name="oldClassID" value="{{classID}}">
+	<input type="hidden" name="memberClassID" value="{{memberClassID}}">
 
 	<label>Member</label>
 	<select name="newMemberID" required>
@@ -82,11 +89,10 @@
 	<button type="submit">Save Changes</button>
 </form>
 
-<form id="delete-enrollment-{{memberID}}-{{classID}}" class="crud-form" method="POST" action="/member-classes/delete">
+<form id="delete-enrollment-{{memberClassID}}" class="crud-form" method="POST" action="/member-classes/delete">
 	<h2>Delete Enrollment</h2>
 
-	<input type="hidden" name="memberID" value="{{memberID}}">
-	<input type="hidden" name="classID" value="{{classID}}">
+	<input type="hidden" name="memberClassID" value="{{memberClassID}}">
 
 	<p>Are you sure you want to remove {{memberName}} from {{className}}?</p>
 

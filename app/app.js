@@ -122,7 +122,7 @@ app.get('/memberships', async (req, res) => {
 app.get('/member-classes', async (req, res) => {
 	try {
 		const query = `
-			SELECT MemberClasses.memberID, MemberClasses.classID, MemberClasses.enrollmentDate, CONCAT(Members.firstName, ' ', Members.lastName) AS memberName, Classes.className
+			SELECT MemberClasses.memberClassID, MemberClasses.memberID, MemberClasses.classID, MemberClasses.enrollmentDate, CONCAT(Members.firstName, ' ', Members.lastName) AS memberName, Classes.className
 			FROM MemberClasses
 			INNER JOIN Members ON MemberClasses.memberID = Members.memberID
 			INNER JOIN Classes ON MemberClasses.classID = Classes.classID;
@@ -141,6 +141,33 @@ app.get('/member-classes', async (req, res) => {
 	} catch (err) {
 		console.error('Error loading member classes:', err);
 		res.status(500).send('Database error loading member classes.');
+	}
+});
+
+// =================================
+// RESET DATABASE
+// =================================
+app.get('/reset-database', async (req, res) => {
+	try {
+		await db.query('CALL ResetDatabase();');
+		const previousPage = req.get('Referer') || '/';
+		res.redirect(previousPage);
+	} catch (err) {
+		console.error('Error resetting database:', err);
+		res.status(500).send('Database error resetting database.');
+	}
+});
+
+// =================================
+// DELETE DEMO FOR RESET
+// =================================
+app.get('/member-classes/delete-demo', async (req, res) => {
+	try {
+		await db.query('CALL DeleteJamieEnrollment();');
+		res.redirect('/member-classes');
+	} catch (err) {
+		console.error('Error deleting demo enrollment:', err);
+		res.status(500).send('Database error deleting demo enrollment.');
 	}
 });
 
