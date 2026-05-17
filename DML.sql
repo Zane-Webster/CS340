@@ -35,7 +35,7 @@ FROM Memberships
 INNER JOIN Members ON Memberships.memberID = Members.memberID;
 
 -- get all member class enrollments for the MemberClasses page
-SELECT MemberClasses.memberID, MemberClasses.classID, CONCAT(Members.firstName, ' ', Members.lastName) AS memberName, Classes.className, MemberClasses.enrollmentDate
+SELECT MemberClasses.memberClassID, MemberClasses.memberID, MemberClasses.classID, CONCAT(Members.firstName, ' ', Members.lastName) AS memberName, Classes.className, MemberClasses.enrollmentDate
 FROM MemberClasses
 INNER JOIN Members ON MemberClasses.memberID = Members.memberID
 INNER JOIN Classes ON MemberClasses.classID = Classes.classID;
@@ -164,10 +164,10 @@ WHERE membershipID = :membershipID_from_update_form;
 
 -- update a member's class enrollment
 UPDATE MemberClasses
-SET memberID = :new_memberID_from_dropdown_Input,
-	classID = :new_classID_from_dropdown_Input,
+SET memberID = :memberID_from_dropdown_Input,
+	classID = :classID_from_dropdown_Input,
 	enrollmentDate = :enrollmentDateInput
-WHERE memberID = :old_memberID_from_update_form AND classID = :old_classID_from_update_form;
+WHERE memberClassID = :memberClassID_from_update_form;
 
 -- -----------------------------------------------------
 -- DELETE QUERIES  -------------------------------------
@@ -191,7 +191,7 @@ WHERE membershipID = :membershipID_selected_from_browse_memberships_page;
 
 -- remove a member from a class without deleting the member or class
 DELETE FROM MemberClasses
-WHERE memberID = :memberID_selected_from_member_class_list AND classID = :classID_selected_from_member_class_list;
+WHERE memberClassID = :memberClassID_selected_from_member_class_list;
 
 
 -- -----------------------------------------------------
