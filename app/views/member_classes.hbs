@@ -1,13 +1,5 @@
 <h1>Class Enrollments</h1>
 
-<p>
-	<button type="button" class="delete-button" onclick="window.location.href='/member-classes/delete-demo'">
-		Delete Jamie Enrollment to Demo RESET
-	</button>
-	<br><br>
-	RESET button located at top right of page
-</p>
-
 <h2>Current Enrollments</h2>
 
 <table>
@@ -27,7 +19,8 @@
 			<td>{{enrollmentDate}}</td>
 			<td>
 				<div class="action-buttons">
-					<button type="button" class="edit-button" onclick="showForm('edit-enrollment-{{memberClassID}}')">Edit</button>
+					<button type="button" class="edit-button" onclick="showEditEnrollmentForm('{{memberClassID}}', '{{memberID}}', '{{classID}}', '{{enrollmentDate}}')">Edit</button>
+
 					<button type="button" class="delete-button" onclick="showForm('delete-enrollment-{{memberClassID}}')">Delete</button>
 				</div>
 			</td>
@@ -63,32 +56,32 @@
 	<button type="submit">Add Enrollment</button>
 </form>
 
-{{#each memberClasses}}
-<form id="edit-enrollment-{{memberClassID}}" class="crud-form" method="POST" action="/member-classes/edit">
+<form id="edit-enrollment-form" class="crud-form" method="POST" action="/member-classes/edit">
 	<h2>Edit Enrollment</h2>
 
-	<input type="hidden" name="memberClassID" value="{{memberClassID}}">
+	<input type="hidden" id="edit-memberClassID" name="memberClassID">
 
 	<label>Member</label>
-	<select name="newMemberID" required>
-		{{#each ../members}}
+	<select id="edit-memberID" name="newMemberID" required>
+		{{#each members}}
 		<option value="{{memberID}}">{{firstName}} {{lastName}}</option>
 		{{/each}}
 	</select>
 
 	<label>Class</label>
-	<select name="newClassID" required>
-		{{#each ../classes}}
+	<select id="edit-classID" name="newClassID" required>
+		{{#each classes}}
 		<option value="{{classID}}">{{className}}</option>
 		{{/each}}
 	</select>
 
 	<label>Enrollment Date</label>
-	<input type="date" name="enrollmentDate" value="{{enrollmentDate}}" required>
+	<input type="date" id="edit-enrollmentDate" name="enrollmentDate" required>
 
 	<button type="submit">Save Changes</button>
 </form>
 
+{{#each memberClasses}}
 <form id="delete-enrollment-{{memberClassID}}" class="crud-form" method="POST" action="/member-classes/delete">
 	<h2>Delete Enrollment</h2>
 

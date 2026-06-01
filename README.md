@@ -1,8 +1,11 @@
 # CS340
 Team 73 Project Group for OSU Ecampus CS340
 
+## CITATIONS:
+CREATE statements in DDL.sql generated using MySQL Forward Engineer
+
 ## TO RUN:
-1. Load DDL.sql into your db
+1. Load DDL.sql and PL.sql into your db
 2. SSH into your account while on the VPN
 3. Run `scp -r app yourONID@classwork.engr.oregonstate.edu:~` in CS340 dir to copy file contents over.
 4. In SSH, cd to dir, then npm install to install dependencies.

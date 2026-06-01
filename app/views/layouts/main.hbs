@@ -18,7 +18,7 @@
 	{{{body}}}
 
     <!-- 
-        Helper function to show add, edit and delete forms. Triggers when you press a CRUD action button.
+        Helper functions to show add, edit and delete forms. Triggers when you press a CRUD action button.
 
         Hides all other CRUD forms, then finds the form you clicked and shows only that form.
     -->
@@ -29,7 +29,18 @@
 			});
 
 			const form = document.getElementById(formId);
-			if (form) form.style.display = 'block';
+			if (form) {
+				form.style.display = 'block';
+			}
+		}
+
+		function showEditEnrollmentForm(memberClassID, memberID, classID, enrollmentDate) {
+			document.getElementById('edit-memberClassID').value = memberClassID;
+			document.getElementById('edit-memberID').value = memberID;
+			document.getElementById('edit-classID').value = classID;
+			document.getElementById('edit-enrollmentDate').value = enrollmentDate;
+
+			showForm('edit-enrollment-form');
 		}
 	</script>
 </body>
