@@ -4,27 +4,27 @@ PROJECT GROUP 73
 - Caleb Webster
 - Jason Hudson
 
-Project Step 4 Draft
-DDL wrapped in store reset procedure
+Data Definition Language for CS340
 
 CREATE statements generated using MySQL Forward Engineer
 
 */
 
+-- resets database to original state
 DROP PROCEDURE IF EXISTS ResetDatabase;
-
 DELIMITER //
-
 CREATE PROCEDURE ResetDatabase()
 BEGIN
 	SET FOREIGN_KEY_CHECKS=0;
 
+	-- drop tables if they already exist
 	DROP TABLE IF EXISTS MemberClasses;
 	DROP TABLE IF EXISTS Memberships;
 	DROP TABLE IF EXISTS Classes;
 	DROP TABLE IF EXISTS Members;
 	DROP TABLE IF EXISTS Trainers;
 
+	-- create Trainers table
 	CREATE TABLE Trainers (
 		`trainerID` INT NOT NULL AUTO_INCREMENT,
 		`firstName` VARCHAR(50) NOT NULL,
@@ -35,6 +35,7 @@ BEGIN
 		UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE
 	) ENGINE = InnoDB;
 
+	-- create Members table
 	CREATE TABLE Members (
 		`memberID` INT NOT NULL AUTO_INCREMENT,
 		`firstName` VARCHAR(50) NOT NULL,
@@ -53,6 +54,7 @@ BEGIN
 			ON UPDATE CASCADE
 	) ENGINE = InnoDB;
 
+	-- create Classes table
 	CREATE TABLE Classes (
 		`classID` INT NOT NULL AUTO_INCREMENT,
 		`className` VARCHAR(255) NOT NULL,
@@ -68,6 +70,7 @@ BEGIN
 			ON UPDATE CASCADE
 	) ENGINE = InnoDB;
 
+	-- create Memberships table
 	CREATE TABLE Memberships (
 		`membershipID` INT NOT NULL AUTO_INCREMENT,
 		`membershipName` VARCHAR(255) NOT NULL,
@@ -84,6 +87,7 @@ BEGIN
 			ON UPDATE CASCADE
 	) ENGINE = InnoDB;
 
+	-- create Memberclasses table
 	CREATE TABLE MemberClasses (
 		`memberClassID` INT NOT NULL AUTO_INCREMENT,
 		`memberID` INT NOT NULL,
@@ -104,6 +108,7 @@ BEGIN
 			ON UPDATE CASCADE
 	) ENGINE = InnoDB;
 
+	-- insert example Trainers
 	INSERT INTO Trainers
 	(firstName, lastName, email, bio)
 	VALUES
@@ -111,6 +116,7 @@ BEGIN
 	('Smith', 'John', 'smith@gym.com', 'Yoga and mobility specialist.'),
 	('Jane', 'Doe', 'jane@gym.com', 'Beginner specialist.');
 
+	-- insert example Members
 	INSERT INTO Members
 	(firstName, lastName, email, phoneNumber, joinDate, trainerID)
 	VALUES
@@ -122,6 +128,7 @@ BEGIN
 		(SELECT trainerID FROM Trainers WHERE email = 'jane@gym.com')),
 	('Jamie', 'Smith', 'jamie@member.com', '5115115111', '2026-04-01', NULL);
 
+	-- insert example Classes
 	INSERT INTO Classes
 	(className, schedule, capacity, trainerID)
 	VALUES
@@ -132,6 +139,7 @@ BEGIN
 	('Cardio Basics', 'Fridays at 5:30 PM', 25,
 		(SELECT trainerID FROM Trainers WHERE email = 'jane@gym.com'));
 
+	-- insert example Memberships
 	INSERT INTO Memberships
 	(membershipName, price, startDate, endDate, memberID)
 	VALUES
@@ -144,6 +152,7 @@ BEGIN
 	('Student', 29.99, '2026-03-20', '2026-04-20',
 		(SELECT memberID FROM Members WHERE email = 'casey@member.com'));
 
+	-- insert example MemberClasses
 	INSERT INTO MemberClasses
 	(memberID, classID, enrollmentDate)
 	VALUES
@@ -168,5 +177,5 @@ END //
 
 DELIMITER ;
 
--- Call ResetDatabase() to init
+-- call ResetDatabase() to init
 CALL ResetDatabase();

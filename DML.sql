@@ -4,11 +4,9 @@ PROJECT GROUP 73
 - Caleb Webster
 - Jason Hudson
 
-Project Step 3 Draft 
-
 Database Manipulation Queries for GYMS
 
-Variables beginning with : represent values supplied by the backend from forms, dropdowns, or selected rows.
+Variables beginning with : represent values supplied by the backend from forms, dropdowns, or selected rows
 */
 
 -- -----------------------------------------------------
@@ -44,10 +42,6 @@ INNER JOIN Classes ON MemberClasses.classID = Classes.classID;
 -- SELECT QUERIES FOR DROPDOWNS  -----------------------
 -- -----------------------------------------------------
 
--- get all trainers to populate trainer dropdowns
-SELECT trainerID, firstName, lastName
-FROM Trainers;
-
 -- get all members to populate member dropdowns
 SELECT memberID, firstName, lastName
 FROM Members;
@@ -57,146 +51,40 @@ SELECT classID, className
 FROM Classes;
 
 -- -----------------------------------------------------
--- SELECT QUERIES FOR UPDATE FORMS  --------------------
--- -----------------------------------------------------
-
--- get one trainer for the edit trainer form
-SELECT trainerID, firstName, lastName, email, bio
-FROM Trainers
-WHERE trainerID = :trainerID_selected_from_browse_trainers_page;
-
--- get one member for the edit member form
-SELECT memberID, firstName, lastName, email, phoneNumber, joinDate, trainerID
-FROM Members
-WHERE memberID = :memberID_selected_from_browse_members_page;
-
--- get one class for the edit class form
-SELECT classID, className, schedule, capacity, trainerID
-FROM Classes
-WHERE classID = :classID_selected_from_browse_classes_page;
-
--- get one membership for the edit membership form
-SELECT membershipID, membershipName, price, startDate, endDate, memberID
-FROM Memberships
-WHERE membershipID = :membershipID_selected_from_browse_memberships_page;
-
--- get one member-class enrollment for the edit enrollment form
-SELECT memberID, classID, enrollmentDate
-FROM MemberClasses
-WHERE memberID = :memberID_selected_from_member_class_list AND classID = :classID_selected_from_member_class_list;
-
--- -----------------------------------------------------
 -- INSERT QUERIES  -------------------------------------
 -- -----------------------------------------------------
 
--- add a new trainer
-INSERT INTO Trainers (firstName, lastName, email, bio)
-VALUES (:firstNameInput, :lastNameInput, :emailInput, :bioInput);
-
--- add a new member
-INSERT INTO Members (firstName, lastName, email, phoneNumber, joinDate, trainerID)
-VALUES (:firstNameInput, :lastNameInput, :emailInput, :phoneNumberInput, :joinDateInput, :trainerID_from_dropdown_Input);
-
--- add a new member without an assigned trainer
-INSERT INTO Members (firstName, lastName, email, phoneNumber, joinDate, trainerID)
-VALUES (:firstNameInput, :lastNameInput, :emailInput, :phoneNumberInput, :joinDateInput, NULL);
-
--- add a new class
-INSERT INTO Classes (className, schedule, capacity, trainerID)
-VALUES (:classNameInput, :scheduleInput, :capacityInput, :trainerID_from_dropdown_Input);
-
--- add a new membership
-INSERT INTO Memberships (membershipName, price, startDate, endDate, memberID)
-VALUES (:membershipNameInput, :priceInput, :startDateInput, :endDateInput, :memberID_from_dropdown_Input);
-
 -- enroll a member in a class
-INSERT INTO MemberClasses (memberID, classID, enrollmentDate)
-VALUES (:memberID_from_dropdown_Input, :classID_from_dropdown_Input, :enrollmentDateInput);
+CALL sp_insert_member_class(
+	:memberID_from_dropdown_Input,
+	:classID_from_dropdown_Input,
+	:enrollmentDateInput
+);
 
 -- -----------------------------------------------------
 -- UPDATE QUERIES  -------------------------------------
 -- -----------------------------------------------------
 
--- update a trainer
-UPDATE Trainers
-SET firstName = :firstNameInput,
-	lastName = :lastNameInput,
-	email = :emailInput,
-	bio = :bioInput
-WHERE trainerID = :trainerID_from_update_form;
-
--- update a member
-UPDATE Members
-SET firstName = :firstNameInput,
-	lastName = :lastNameInput,
-	email = :emailInput,
-	phoneNumber = :phoneNumberInput,
-	joinDate = :joinDateInput,
-	trainerID = :trainerID_from_dropdown_Input
-WHERE memberID = :memberID_from_update_form;
-
--- update a member to have no assigned trainer
-UPDATE Members
-SET firstName = :firstNameInput,
-	lastName = :lastNameInput,
-	email = :emailInput,
-	phoneNumber = :phoneNumberInput,
-	joinDate = :joinDateInput,
-	trainerID = NULL
-WHERE memberID = :memberID_from_update_form;
-
--- update a class
-UPDATE Classes
-SET className = :classNameInput,
-	schedule = :scheduleInput,
-	capacity = :capacityInput,
-	trainerID = :trainerID_from_dropdown_Input
-WHERE classID = :classID_from_update_form;
-
--- update a membership
-UPDATE Memberships
-SET membershipName = :membershipNameInput,
-	price = :priceInput,
-	startDate = :startDateInput,
-	endDate = :endDateInput,
-	memberID = :memberID_from_dropdown_Input
-WHERE membershipID = :membershipID_from_update_form;
-
--- update a member's class enrollment
-UPDATE MemberClasses
-SET memberID = :memberID_from_dropdown_Input,
-	classID = :classID_from_dropdown_Input,
-	enrollmentDate = :enrollmentDateInput
-WHERE memberClassID = :memberClassID_from_update_form;
+-- update a members class enrollment
+CALL sp_update_member_class(
+	:memberClassID_from_update_form,
+	:memberID_from_dropdown_Input,
+	:classID_from_dropdown_Input,
+	:enrollmentDateInput
+);
 
 -- -----------------------------------------------------
 -- DELETE QUERIES  -------------------------------------
 -- -----------------------------------------------------
 
--- delete a trainer
-DELETE FROM Trainers
-WHERE trainerID = :trainerID_selected_from_browse_trainers_page;
-
--- delete a member
-DELETE FROM Members
-WHERE memberID = :memberID_selected_from_browse_members_page;
-
--- delete a class
-DELETE FROM Classes
-WHERE classID = :classID_selected_from_browse_classes_page;
-
--- delete a membership
-DELETE FROM Memberships
-WHERE membershipID = :membershipID_selected_from_browse_memberships_page;
-
--- remove a member from a class without deleting the member or class
-DELETE FROM MemberClasses
-WHERE memberClassID = :memberClassID_selected_from_member_class_list;
+-- remove a member from a class
+CALL sp_delete_member_class(
+	:memberClassID_selected_from_member_class_list
+);
 
 
 -- -----------------------------------------------------
 -- RESET DATABASE  -------------------------------------
 -- -----------------------------------------------------
 
--- reset database by rerunning the submitted DDL.sql file
--- the DDL.sql file drops, recreates, and repopulates all tables with sample data
+CALL ResetDatabase();

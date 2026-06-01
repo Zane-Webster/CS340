@@ -119,6 +119,8 @@ app.get('/memberships', async (req, res) => {
 // =================================
 // MEMBERCLASSES PAGE
 // =================================
+
+// SELECT
 app.get('/member-classes', async (req, res) => {
 	try {
 		const query = `
@@ -141,6 +143,59 @@ app.get('/member-classes', async (req, res) => {
 	} catch (err) {
 		console.error('Error loading member classes:', err);
 		res.status(500).send('Database error loading member classes.');
+	}
+});
+
+// ADD
+app.post('/member-classes/add', async (req, res) => {
+	try {
+		const memberID = req.body.memberID;
+		const classID = req.body.classID;
+		const enrollmentDate = req.body.enrollmentDate;
+
+		const query = 'CALL sp_insert_member_class(?, ?, ?);';
+
+		await db.query(query, [memberID, classID, enrollmentDate]);
+
+		res.redirect('/member-classes');
+	} catch (err) {
+		console.error('Error adding class enrollment:', err);
+		res.status(500).send('Database error adding class enrollment.');
+	}
+});
+
+// UPDATE
+app.post('/member-classes/edit', async (req, res) => {
+	try {
+		const memberClassID = req.body.memberClassID;
+		const newMemberID = req.body.newMemberID;
+		const newClassID = req.body.newClassID;
+		const enrollmentDate = req.body.enrollmentDate;
+
+		const query = 'CALL sp_update_member_class(?, ?, ?, ?);';
+
+		await db.query(query, [memberClassID, newMemberID, newClassID, enrollmentDate]);
+
+		res.redirect('/member-classes');
+	} catch (err) {
+		console.error('Error updating class enrollment:', err);
+		res.status(500).send('Database error updating class enrollment.');
+	}
+});
+
+// DELETE
+app.post('/member-classes/delete', async (req, res) => {
+	try {
+		const memberClassID = req.body.memberClassID;
+
+		const query = 'CALL sp_delete_member_class(?);';
+
+		await db.query(query, [memberClassID]);
+
+		res.redirect('/member-classes');
+	} catch (err) {
+		console.error('Error deleting class enrollment:', err);
+		res.status(500).send('Database error deleting class enrollment.');
 	}
 });
 
